@@ -1,0 +1,6 @@
+pyTelegramBotAPI
+supabase
+requests
+qrcode
+binance
+python-dotenv
