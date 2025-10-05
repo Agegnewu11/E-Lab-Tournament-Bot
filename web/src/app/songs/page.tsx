@@ -14,7 +14,7 @@ export default function SongsPage() {
         <ul className="space-y-2">
           {data?.map((s: any) => (
             <li key={s.id} className="p-3 bg-gray-900 rounded border border-gray-800">
-              <div className="font-semibold">{s.title}</div>
+              <a href={`/songs/${s.id}`} className="font-semibold hover:underline">{s.title}</a>
               <div className="text-sm text-gray-400">{s.artist ?? "Unknown"}</div>
             </li>
           ))}

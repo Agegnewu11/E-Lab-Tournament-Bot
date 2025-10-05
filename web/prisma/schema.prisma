@@ -29,6 +29,8 @@ model User {
   image          String?
 
   sessions Session[]
+  messages Message[]    @relation("UserMessages")
+  reactions Reaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -59,11 +61,48 @@ model Song {
   id        String   @id @default(cuid())
   title     String
   artist    String?
+  lyrics    String?
+  audioUrl  String?
   createdAt DateTime @default(now())
 }
 
 model Group {
   id        String   @id @default(cuid())
   name      String   @unique
+  description String?
   createdAt DateTime @default(now())
+
+  messages Message[]
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  groupId    String
+  authorId   String
+  content    String
+  replyToId  String?
+  attachmentUrl  String?
+  attachmentType String?
+  pinnedAt   DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  author  User  @relation("UserMessages", fields: [authorId], references: [id], onDelete: Cascade)
+  replyTo Message? @relation("MessageReplies", fields: [replyToId], references: [id])
+  replies Message[] @relation("MessageReplies")
+  reactions Reaction[]
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  emoji     String
+  messageId String
+  userId    String
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])
 }
